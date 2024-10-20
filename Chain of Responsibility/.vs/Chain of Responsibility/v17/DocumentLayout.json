@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{81DFC780-4B41-4E03-8DC9-DDBC99F854F2}|Chain of Responsibility\\Chain of Responsibility.vcxproj|solutionrelative:Chain of Responsibility\\Chain of Responsibility.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{81DFC780-4B41-4E03-8DC9-DDBC99F854F2}|Chain of Responsibility\\Chain of Responsibility.vcxproj|C:\\PROGRAM FILES\\MICROSOFT VISUAL STUDIO\\2022\\COMMUNITY\\VC\\TOOLS\\MSVC\\14.39.33519\\INCLUDE\\XMEMORY||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\xmemory||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,8 +31,7 @@
               "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include\\xmemory",
               "ViewState": "AQIAADwIAAAAAAAAAAAUwEsIAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-17T20:28:08.932Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-17T20:28:08.932Z"
             },
             {
               "$type": "Document",
@@ -40,9 +39,9 @@
               "Title": "Chain of Responsibility.cpp",
               "DocumentMoniker": "D:\\DesPatInC\u002B\u002B\\Command, Iterator, Observer, Chain of Responsibility\\Chain of Responsibility\\Chain of Responsibility\\Chain of Responsibility.cpp",
               "RelativeDocumentMoniker": "Chain of Responsibility\\Chain of Responsibility.cpp",
-              "ToolTip": "D:\\DesPatInC\u002B\u002B\\Command, Iterator, Observer, Chain of Responsibility\\Chain of Responsibility\\Chain of Responsibility\\Chain of Responsibility.cpp",
-              "RelativeToolTip": "Chain of Responsibility\\Chain of Responsibility.cpp",
-              "ViewState": "AQIAAHcAAAAAAAAAAABgPXkAAAAIAAAA",
+              "ToolTip": "D:\\DesPatInC\u002B\u002B\\Command, Iterator, Observer, Chain of Responsibility\\Chain of Responsibility\\Chain of Responsibility\\Chain of Responsibility.cpp*",
+              "RelativeToolTip": "Chain of Responsibility\\Chain of Responsibility.cpp*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-17T11:07:22.516Z",
               "EditorCaption": ""

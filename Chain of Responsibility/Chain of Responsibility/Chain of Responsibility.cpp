@@ -2,144 +2,114 @@
 #include <string>
 #include <fstream>
 
+enum class MessageType {
+    Warning,
+    Error,
+    FatalError,
+    Unknown
+};
+
 class LogMessage {
 public:
-    virtual void type(std::string& type) = 0;
-    virtual void message() = 0;
-    virtual void NextHendler(LogMessage* handler) = 0;
-protected:
-    std::string type_;
+    LogMessage(MessageType type, const std::string& message)
+        : type_(type), message_(message) {}
+
+    MessageType type() const { return type_; }
+    const std::string& message() const { return message_; }
+
+private:
+    MessageType type_;
     std::string message_;
 };
 
-class ForWarning : public LogMessage {
+class LogHandler {
 public:
-    explicit ForWarning() {
-        this->type_ = "warning";
-    }
+    virtual ~LogHandler() = default;
 
-    void NextHendler(LogMessage* handler) override {
-        NextType = handler;
-    }
-    void type(std::string& type) override {
-        if (type == this->type_) {
-            this->message();
+    void receiveMessage(const LogMessage& msg) {
+        if (canHandle() == msg.type()) {
+            handleMessage(msg);
         }
-        else if (NextType != nullptr) {
-            NextType->type(type);
+        else if (next_) {
+            next_->receiveMessage(msg);
         }
         else {
-            std::cout << "Нет подходящего типа" << std::endl;
+            throw std::runtime_error("Error: no handler for this message was found!");
         }
     }
-    void message() override {
-        std::cout << message_ << std::endl;
+
+    void setNext(LogHandler* next) {
+        next_ = next;
     }
+
+protected:
+    virtual void handleMessage(const LogMessage& msg) = 0;
+    virtual MessageType canHandle() const = 0; 
+
 private:
-    std::string message_ = "warning";
-    LogMessage* NextType = nullptr;
+    LogHandler* next_ = nullptr;
 };
 
-class ForError : public LogMessage {
-public:
-    explicit ForError() {
-        this->type_ = "error";
+class WarningHandler : public LogHandler {
+protected:
+    void handleMessage(const LogMessage& msg) override {
+        std::cout << "Warning: " << msg.message() << std::endl;
     }
 
-    void NextHendler(LogMessage* handler) override {
-        NextType = handler;
+    MessageType canHandle() const override {
+        return MessageType::Warning;
     }
-    void type(std::string& type) override {
-        if (type == this->type_) {
-            this->message();
-        }
-        else if (NextType != nullptr) {
-            NextType->type(type);
-        }
-        else {
-            std::cout << "Нет подходящего типа" << std::endl;
-        }
-    }
-    void message() override {
+};
+
+class ErrorHandler : public LogHandler {
+protected:
+    void handleMessage(const LogMessage& msg) override {
         std::ofstream file("filename.txt");
         if (!file) {
             std::cout << "Ошибка открытия файла!" << std::endl;
         }
         else {
-            file << message_ << std::endl;
+            file << msg.message() << std::endl;
         }
     }
-private:
-    std::string message_ = "error";
-    LogMessage* NextType = nullptr;
+
+    MessageType canHandle() const override {
+        return MessageType::Error;
+    }
 };
 
-class FatError : public LogMessage {
-public:
-    explicit FatError() {
-        this->type_ = "FatError";
+class FatalErrorHandler : public LogHandler {
+protected:
+    void handleMessage(const LogMessage& msg) override {
+        throw std::runtime_error("Fatal Error: " + msg.message());
     }
 
-    void NextHendler(LogMessage* handler) override {
-        NextType = handler;
+    MessageType canHandle() const override {
+        return MessageType::FatalError;
     }
-    void type(std::string& type) override {
-        if (type == this->type_) {
-            this->message();
-        }
-        else if (NextType != nullptr) {
-            NextType->type(type);
-        }
-        else {
-            std::cout << "Нет подходящего типа" << std::endl;
-        }
-    }
-    void message() override {
-        throw std::runtime_error(message_);
-    }
-private:
-    std::string message_ = "FatError";
-    LogMessage* NextType = nullptr;
 };
 
-class Unknown : public LogMessage {
-public:
-    explicit Unknown() = default;
-    void NextHendler(LogMessage* handler) override {
+int main() {
+    FatalErrorHandler fatalHandler;
+    ErrorHandler errorHandler;
+    WarningHandler warningHandler;
 
-    }
-    void type(std::string& type) override {
-        if (NextType != nullptr) {
-            NextType->type(type);
-        }
-        else {
-            this->message();
-        }
-    }
-    void message() override {
-        throw std::runtime_error(message_);
-    }
-private:
-    std::string message_ = "Unknown message";
-    LogMessage* NextType = nullptr;
-};
+    warningHandler.setNext(&errorHandler);
+    errorHandler.setNext(&fatalHandler);
 
-int main()
-{
-    auto ForWar = std::make_unique<ForWarning>();
-    auto ForEr = std::make_shared<ForError>();
-    auto ForFatEr = std::make_shared<FatError>();
-    auto Unknow = std::make_shared<Unknown>();
+    try {
+        LogMessage warningMsg(MessageType::Warning, "This is a warning message.");
+        warningHandler.receiveMessage(warningMsg);
 
-    ForWar->NextHendler(ForEr.get());
-    ForEr->NextHendler(ForFatEr.get());
-    ForFatEr->NextHendler(Unknow.get());
+        LogMessage errorMsg(MessageType::Error, "This is an error message.");
+        warningHandler.receiveMessage(errorMsg);
 
-    std::string str = "alala";
-    try{
-        ForWar->type(str);
+        LogMessage fatalMsg(MessageType::FatalError, "This is a fatal error message.");
+        warningHandler.receiveMessage(fatalMsg);
     }
-    catch (const std::exception& e){
-        std::cout << e.what() << std::endl;
+    catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
+
+    return 0;
 }
